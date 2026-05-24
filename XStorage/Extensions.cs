@@ -4,10 +4,13 @@ namespace XStorage
 {
     internal static class Extensions
     {
+        private static readonly System.Collections.Generic.Dictionary<Container, ZNetView> ContainerViews = new System.Collections.Generic.Dictionary<Container, ZNetView>();
+        private static readonly System.Collections.Generic.Dictionary<Container, ZDO> ContainerZdos = new System.Collections.Generic.Dictionary<Container, ZDO>();
+
         #region Character
         internal static Vector3 GetPosition(this Character character)
         {
-            return character.m_nview.GetZDO().GetPosition();
+            return character.transform.position;
         }
         #endregion
 
@@ -24,12 +27,29 @@ namespace XStorage
 
         internal static Vector3 GetPosition(this Container container)
         {
-            return container.GetZDO().GetPosition();
+            return container.transform.position;
+        }
+
+        internal static ZNetView GetNView(this Container container)
+        {
+            if (!ContainerViews.TryGetValue(container, out ZNetView view) || !view)
+            {
+                view = container.GetComponent<ZNetView>();
+                ContainerViews[container] = view;
+            }
+
+            return view;
         }
 
         internal static ZDO GetZDO(this Container container)
         {
-            return container.m_nview.GetZDO();
+            if (!ContainerZdos.TryGetValue(container, out ZDO zdo) || zdo == null)
+            {
+                zdo = container.GetNView()?.GetZDO();
+                ContainerZdos[container] = zdo;
+            }
+
+            return zdo;
         }
 
         internal static ZDOID GetZDOID(this Container container)
@@ -60,7 +80,8 @@ namespace XStorage
 
         internal static bool IsPlacedByPlayer(this Container container)
         {
-            return container.m_piece && container.m_piece.IsPlacedByPlayer();
+            Piece piece = container.GetComponent<Piece>();
+            return piece && piece.IsPlacedByPlayer();
         }
         #endregion
 

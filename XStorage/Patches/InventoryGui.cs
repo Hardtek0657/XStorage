@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+using HarmonyLib;
+using UnityEngine;
 
 namespace XStorage.Patches
 {
@@ -27,9 +28,9 @@ namespace XStorage.Patches
     [HarmonyPatch(typeof(InventoryGui), nameof(InventoryGui.Hide))]
     static class InventoryGui_Hide
     {
-        static void Prefix(InventoryGui __instance)
+        static void Prefix(Animator ___m_animator)
         {
-            if (!__instance.m_animator.GetBool("visible"))
+            if (!___m_animator.GetBool("visible"))
             {
                 return;
             }
@@ -38,7 +39,7 @@ namespace XStorage.Patches
         }
     }
 
-    [HarmonyPatch(typeof(InventoryGui), nameof(InventoryGui.OnSelectedItem))]
+    [HarmonyPatch(typeof(InventoryGui), "OnSelectedItem")]
     static class InventoryGui_OnSelectedItem
     {
         static bool Prefix(InventoryGui __instance, InventoryGrid grid, ItemDrop.ItemData item, InventoryGrid.Modifier mod)
@@ -49,7 +50,7 @@ namespace XStorage.Patches
                 return true;
             }
 
-            if (!__instance.m_currentContainer)
+            if (!__instance.GetCurrentContainer())
             {
                 // No container opened: Ignore
                 return true;

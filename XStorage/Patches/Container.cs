@@ -4,12 +4,12 @@ using XStorage.Components;
 
 namespace XStorage.Patches
 {
-    [HarmonyPatch(typeof(Container), nameof(Container.Awake))]
+    [HarmonyPatch(typeof(Container), "Awake")]
     static class Container_Awake
     {
         static void Postfix(Container __instance)
         {
-            if (!__instance.m_piece)
+            if (!__instance.GetComponent<Piece>())
             {
                 // Don't do anything if this container has no Piece property (i.e. ghost items).
                 Log.Debug($"Ignoring `{__instance.m_name}` (this is fine)");
@@ -83,7 +83,7 @@ namespace XStorage.Patches
                 }
 
                 long playerID = Game.instance.GetPlayerProfile().GetPlayerID();
-                if (!__instance.CheckAccess(playerID))
+                if (!__instance.CheckContainerAccess(playerID))
                 {
                     // Player does not have access, abort!
                     character.Message(MessageHud.MessageType.Center, "$msg_cantopen");
@@ -98,14 +98,14 @@ namespace XStorage.Patches
     }
 
 
-    [HarmonyPatch(typeof(Container), nameof(Container.RPC_OpenRespons))]
+    [HarmonyPatch(typeof(Container), "RPC_OpenRespons")]
     static class Container_RPCOpenRespons
     {
         static bool Prefix(Container __instance, bool granted)
         {
             var containerName = __instance.GetXStorageNameOrDefault();
 
-            if (!InventoryGui.instance.m_currentContainer)
+            if (!InventoryGui.instance.GetCurrentContainer())
             {
                 // InventoryGui does not have a container yet, so this one must be the one it's trying to show
                 Log.Debug($"Opening container `{containerName}` into the vanilla UI");

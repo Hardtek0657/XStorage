@@ -40,7 +40,7 @@ namespace XStorage
         {
             get
             {
-                return Game.instance.m_shuttingDown;
+                return Game.instance != null && Game.instance.IsShuttingDown();
             }
         }
 
@@ -51,7 +51,7 @@ namespace XStorage
         {
             get
             {
-                return ZRoutedRpc.instance.GetServerPeerID();
+                return ZRoutedRpc.instance.GetServerPeerId();
             }
         }
     }

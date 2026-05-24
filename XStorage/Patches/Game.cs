@@ -2,7 +2,7 @@
 
 namespace XStorage.Patches
 {
-    [HarmonyPatch(typeof(Game), nameof(Game.Awake))]
+    [HarmonyPatch(typeof(Game), "Awake")]
     static class Game_Awake
     {
         /// <summary>
@@ -14,7 +14,7 @@ namespace XStorage.Patches
         }
     }
 
-    [HarmonyPatch(typeof(Game), nameof(Game.Start))]
+    [HarmonyPatch(typeof(Game), "Start")]
     static class Game_Start
     {
         /// <summary>

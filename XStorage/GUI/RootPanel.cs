@@ -73,7 +73,7 @@ namespace XStorage.GUI
         public void UpdateSize(int visiblePanelCount)
         {
             // Don't go outside the screen bounds
-            var scale = GuiScaler.m_scalers[0].GetScreenSizeFactor();
+            var scale = 1f;
             int maxColsOnScreen = Mathf.FloorToInt(Screen.width / scale / ContainerPanel.SinglePanelWithWeightPanelSize.x);
             int maxRowsOnScreen = Mathf.FloorToInt(Screen.height / scale / ContainerPanel.SinglePanelWithWeightPanelSize.y);
 

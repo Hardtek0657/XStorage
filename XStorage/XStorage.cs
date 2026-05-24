@@ -82,7 +82,7 @@ namespace XStorage
             var maxOpenChests = XConfig.Instance.MaxOpenChests.Value;
 
             var nearbyContainers =
-                GameObject.FindObjectsOfType<Container>()
+                GameObject.FindObjectsByType<Container>(FindObjectsSortMode.None)
                     .Where(c =>
                             c != container &&
                             !PanelManager.Instance.ContainsPanel(c) &&
@@ -116,7 +116,7 @@ namespace XStorage
                 return;
             }
 
-            if (!container.m_name.Equals(newName) || !container.GetInventory().m_name.Equals(newName))
+            if (!container.m_name.Equals(newName) || !container.GetInventory().GetName().Equals(newName))
             {
                 UpdateContainerAndInventoryName(container, newName);
             }
@@ -126,7 +126,7 @@ namespace XStorage
         {
             Log.Debug($"Updating `{container.m_name}`: `{newName}`");
             container.m_name = newName;
-            container.GetInventory().m_name = newName;
+            container.GetInventory().SetInventoryName(newName);
         }
         #endregion
 
@@ -157,7 +157,7 @@ namespace XStorage
 
             var allContainers = new List<Container>
             {
-                InventoryGui.instance.m_currentContainer
+                InventoryGui.instance.GetCurrentContainer()
             };
             allContainers.AddRange(PanelManager.Instance.GetContainerList());
 

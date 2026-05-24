@@ -59,7 +59,7 @@ namespace XStorage.Components
         private void OnGridItemRightClick(InventoryGrid grid, ItemDrop.ItemData item, Vector2i pos)
         {
             // Let InventoryGui handle this event
-            InventoryGui.instance.OnRightClickItem(grid, item, pos);
+            InventoryGui.instance.InvokeOnRightClickItem(grid, item, pos);
         }
 
         private void OnGridItemSelected(InventoryGrid grid, ItemDrop.ItemData item, Vector2i pos, InventoryGrid.Modifier mod)
@@ -70,13 +70,13 @@ namespace XStorage.Components
             {
                 Player localPlayer = Player.m_localPlayer;
                 localPlayer.GetInventory().MoveItemToThis(grid.GetInventory(), item);
-                InventoryGui.instance.UpdateCraftingPanel();
+                InventoryGui.instance.InvokeUpdateCraftingPanel();
                 InventoryGui.instance.m_moveItemEffects.Create(InventoryGui.instance.transform.position, Quaternion.identity);
                 return;
             }
 
             // Any action that isn't ctrl+click (move) can be handled by vanilla code in InventoryGui
-            InventoryGui.instance.OnSelectedItem(grid, item, pos, mod);
+            InventoryGui.instance.InvokeOnSelectedItem(grid, item, pos, mod);
         }
 
         public void OnTakeAll()
@@ -87,7 +87,7 @@ namespace XStorage.Components
                 CancelDrag();
                 Inventory inventory = m_currentContainer.GetInventory();
                 player.GetInventory().MoveAll(inventory);
-                InventoryGui.instance.UpdateCraftingPanel();
+                InventoryGui.instance.InvokeUpdateCraftingPanel();
             }
         }
 
@@ -146,7 +146,7 @@ namespace XStorage.Components
 
         public void CancelDrag()
         {
-            InventoryGui.instance.SetupDragItem(null, null, 1);
+            InventoryGui.instance.InvokeSetupDragItem(null, null, 1);
         }
     }
 }
